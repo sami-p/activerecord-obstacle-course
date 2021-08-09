@@ -87,31 +87,33 @@ describe 'ActiveRecord Obstacle Course, Week 2' do
     # order = Order.find(@order_3.id)
     # grouped_items = order.items.sort_by { |item| item.name }
     # ------------------------------------------------------------
-
+    # require "pry"; binding.pry
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
+      order = Order.find(@order_3.id)
+
+      grouped_items = order.items.select('items.*').group(:id, :name)
     # ------------------------------------------------------------
 
     # Expectation
     expect(grouped_items).to eq(expected_result)
   end
 
-  xit '14. plucks all values from one column' do
+  it '14. plucks all values from one column' do
     expected_result = ['Abercrombie', 'Banana Republic', 'Calvin Klein', 'Dickies', 'Eddie Bauer', 'Fox', 'Giorgio Armani', 'Hurley', 'Izod', 'J.crew']
 
     # ----------------------- Using Ruby -------------------------
-    names = Item.all.map(&:name)
+    # names = Item.all.map(&:name)
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
+    names = Item.all.pluck(:name)
     # ------------------------------------------------------------
 
     # Expectation
     expect(names).to eq(expected_result)
   end
 
-  xit '15. gets all item names associated with all orders' do
+  it '15. gets all item names associated with all orders' do
     expected_result = [
       'Dickies', 'Giorgio Armani', 'Banana Republic', 'Eddie Bauer',
       'Eddie Bauer', 'Banana Republic', 'J.crew', 'Calvin Klein',
@@ -131,17 +133,18 @@ describe 'ActiveRecord Obstacle Course, Week 2' do
     ]
 
     # ----------------------- Using Ruby -------------------------
-    names = Order.all.map do |order|
-      if order.items
-        order.items.map { |item| item.name }
-      end
-    end
-
-    names = names.flatten
+    # names = Order.all.map do |order|
+    #   if order.items
+    #     order.items.map { |item| item.name }
+    #   end
+    # end
+    #
+    # names = names.flatten
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
+      names = Order.joins(:items).pluck(:name)
+
     # ------------------------------------------------------------
 
     # Expectation
